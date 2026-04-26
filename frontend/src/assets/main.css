@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@layer components {
+  .soft-card {
+    @apply bg-slate-100 rounded-2xl px-6 py-4;
+    box-shadow: 8px 8px 24px rgba(163, 177, 198, 0.6), -8px -8px 24px rgba(255, 255, 255, 0.9);
+  }
+  .glass {
+    backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', 'Manrope', sans-serif;
+  margin: 0;
+}
