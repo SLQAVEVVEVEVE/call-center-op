@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">CallCenterOp</string>
+    <string name="title_activity_main">CallCenterOp</string>
+    <string name="package_name">com.yourco.callcenter</string>
+    <string name="custom_url_scheme">com.yourco.callcenter</string>
+</resources>
