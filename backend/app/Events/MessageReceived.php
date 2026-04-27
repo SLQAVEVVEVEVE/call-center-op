@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Http\Resources\MessageResource;
 use App\Models\Chat;
 use App\Models\Message;
 use App\Models\User;
@@ -36,12 +37,8 @@ class MessageReceived implements ShouldBroadcast
 
     public function broadcastWith(): array
     {
-        return [
-            'id'         => $this->message->id,
-            'chat_id'    => $this->message->chat_id,
-            'body'       => $this->message->body,
-            'direction'  => $this->message->direction,
-            'created_at' => $this->message->created_at?->toISOString(),
-        ];
+        $this->message->loadMissing('attachments');
+
+        return MessageResource::make($this->message)->resolve();
     }
 }

@@ -14,25 +14,7 @@ defineEmits<{ 'update:modelValue': [value: string] }>()
     :type="type ?? 'text'"
     :placeholder="placeholder"
     :required="required"
-    class="app-input"
+    class="w-full py-3 px-4 rounded-xl text-base bg-slate-50 border border-slate-200 outline-none focus:border-[var(--color-brand-500)] focus:bg-white transition"
     @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
   />
 </template>
-
-<style scoped>
-.app-input {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 0.75rem;
-  font-size: 1rem;
-  background: #f8fafc;
-  outline: none;
-  transition: border-color 0.2s;
-  box-sizing: border-box;
-}
-.app-input:focus {
-  border-color: #2563eb;
-  background: #fff;
-}
-</style>

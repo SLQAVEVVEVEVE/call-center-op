@@ -12,7 +12,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me',      [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    Route::get('/chats',                      [ChatController::class, 'index']);
-    Route::get('/chats/{chat}/messages',      [MessageController::class, 'index']);
-    Route::post('/chats/{chat}/messages',     [MessageController::class, 'store']);
+    Route::get('/chats',                  [ChatController::class, 'index']);
+    Route::patch('/chats/{chat}',         [ChatController::class, 'update']);
+    Route::get('/chats/{chat}/messages',  [MessageController::class, 'index']);
+    Route::post('/chats/{chat}/messages', [MessageController::class, 'store']);
 });

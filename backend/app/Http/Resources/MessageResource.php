@@ -16,6 +16,17 @@ class MessageResource extends JsonResource
             'body'                => $this->body,
             'author_type'         => $this->author_type,
             'telegram_message_id' => $this->telegram_message_id,
+            'attachments'         => $this->whenLoaded(
+                'attachments',
+                fn () => $this->attachments->map(fn ($a) => [
+                    'id'     => $a->id,
+                    'kind'   => $a->kind,
+                    'url'    => $a->url,
+                    'width'  => $a->width,
+                    'height' => $a->height,
+                ])->all(),
+                [],
+            ),
             'created_at'          => $this->created_at?->toISOString(),
         ];
     }

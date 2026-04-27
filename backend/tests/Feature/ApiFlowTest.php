@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Events\ChatUpdated;
 use App\Events\MessageSent;
 use App\Models\Chat;
 use App\Models\Message;
@@ -52,7 +53,7 @@ class ApiFlowTest extends TestCase
         $bot = $this->mock(Nutgram::class);
         $bot->shouldReceive('sendMessage')->once()->andReturn((object) ['message_id' => 999]);
 
-        Event::fake([MessageSent::class]);
+        Event::fake([MessageSent::class, ChatUpdated::class]);
 
         $sendResponse = $this->postJson("/api/chats/{$chat->id}/messages", [
             'body' => 'Reply from operator',
@@ -66,6 +67,15 @@ class ApiFlowTest extends TestCase
             'body'      => 'Reply from operator',
         ]);
 
+        // Auto-assign on first reply (Phase 06): chat should now belong to the operator
+        // and bump from 'new' to 'in_progress'.
+        $this->assertDatabaseHas('chats', [
+            'id'                  => $chat->id,
+            'assigned_to_user_id' => $user->id,
+            'status'              => 'in_progress',
+        ]);
+
         Event::assertDispatched(MessageSent::class);
+        Event::assertDispatched(ChatUpdated::class);
     }
 }

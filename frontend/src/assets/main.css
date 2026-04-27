@@ -1,14 +1,49 @@
 @import "tailwindcss";
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/inter/700.css";
+
+@theme {
+  --color-brand-500: #2563eb;
+  --color-brand-600: #1d4ed8;
+  --color-surface: #f6f8fc;
+  --color-surface-2: #ffffff;
+  --color-ink: #0f172a;
+  --color-ink-muted: #475569;
+  --color-bubble-in: #e2e8f0;
+  --color-bubble-in-text: #1e293b;
+  --radius-bubble: 1rem;
+  --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.06), 0 4px 12px rgba(15, 23, 42, 0.06);
+  --max-w-thread: 768px;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
 
 @layer components {
   .soft-card {
     @apply bg-slate-100 rounded-2xl px-6 py-4;
-    box-shadow: 8px 8px 24px rgba(163, 177, 198, 0.6), -8px -8px 24px rgba(255, 255, 255, 0.9);
+    box-shadow:
+      8px 8px 24px rgba(163, 177, 198, 0.6),
+      -8px -8px 24px rgba(255, 255, 255, 0.9);
   }
   .glass {
     backdrop-filter: blur(12px);
-    background: rgba(255, 255, 255, 0.65);
+    background: rgba(255, 255, 255, 0.72);
     border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  .status-pill {
+    @apply inline-flex items-center px-2 py-0.5 text-xs font-semibold rounded-full;
+  }
+  .status-pill-new {
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--color-brand-600);
+  }
+  .status-pill-in_progress {
+    background: rgba(245, 158, 11, 0.12);
+    color: #b45309;
+  }
+  .status-pill-resolved {
+    background: rgba(16, 185, 129, 0.12);
+    color: #047857;
   }
 }
 
@@ -19,6 +54,19 @@
 }
 
 body {
-  font-family: 'Inter', 'Manrope', sans-serif;
+  font-family: var(--font-sans);
   margin: 0;
+  color: var(--color-ink);
+  background: var(--color-surface);
+}
+
+/* Message arrival motion — fade + slight rise. Enter only, no exit. */
+.msg-enter-active {
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+.msg-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
 }

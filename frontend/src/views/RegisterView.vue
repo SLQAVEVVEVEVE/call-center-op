@@ -25,7 +25,7 @@ async function submit() {
       password: password.value,
       password_confirmation: passwordConfirmation.value,
     })
-    router.push('/chats')
+    router.push('/dashboard')
   } catch (e: any) {
     error.value = e.response?.data?.message ?? 'Registration failed'
   } finally {
@@ -35,62 +35,30 @@ async function submit() {
 </script>
 
 <template>
-  <div class="auth-wrap">
-    <form class="soft-card auth-card" @submit.prevent="submit">
-      <h1 class="auth-title">Create Account</h1>
-      <AppInput v-model="name" placeholder="Name" :required="true" />
+  <div
+    class="min-h-dvh flex items-center justify-center px-4 bg-gradient-to-br from-slate-100 to-slate-50"
+  >
+    <form class="soft-card w-full max-w-sm flex flex-col gap-4" @submit.prevent="submit">
+      <h1 class="text-2xl font-bold text-[var(--color-ink)] m-0">Регистрация</h1>
+      <AppInput v-model="name" placeholder="Имя" :required="true" />
       <AppInput v-model="email" type="email" placeholder="Email" :required="true" />
-      <AppInput v-model="password" type="password" placeholder="Password" :required="true" />
+      <AppInput v-model="password" type="password" placeholder="Пароль" :required="true" />
       <AppInput
         v-model="passwordConfirmation"
         type="password"
-        placeholder="Confirm Password"
+        placeholder="Повторите пароль"
         :required="true"
       />
-      <p v-if="error" class="auth-error">{{ error }}</p>
+      <p v-if="error" class="text-sm text-red-600 m-0">{{ error }}</p>
       <AppButton type="submit" :disabled="loading">
-        {{ loading ? 'Creating…' : 'Create Account' }}
+        {{ loading ? 'Создаём…' : 'Создать аккаунт' }}
       </AppButton>
-      <p class="auth-link">Already have an account? <router-link to="/login">Sign In</router-link></p>
+      <p class="text-sm text-center text-[var(--color-ink-muted)] m-0">
+        Уже есть аккаунт?
+        <router-link to="/login" class="text-[var(--color-brand-500)] font-semibold">
+          Войти
+        </router-link>
+      </p>
     </form>
   </div>
 </template>
-
-<style scoped>
-.auth-wrap {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #e8edf5 0%, #f0f4fb 100%);
-}
-.auth-card {
-  width: 100%;
-  max-width: 380px;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-.auth-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #1e293b;
-  margin: 0;
-}
-.auth-error {
-  color: #dc2626;
-  font-size: 0.875rem;
-  margin: 0;
-}
-.auth-link {
-  font-size: 0.875rem;
-  text-align: center;
-  color: #64748b;
-  margin: 0;
-}
-.auth-link a {
-  color: #2563eb;
-  font-weight: 600;
-  text-decoration: none;
-}
-</style>

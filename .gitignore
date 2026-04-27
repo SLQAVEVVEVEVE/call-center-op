@@ -5,3 +5,6 @@ dist/
 *.keystore
 android/app/build/
 backend/callcenter
+
+# Local Claude Code settings (per-developer, never shared)
+.claude/

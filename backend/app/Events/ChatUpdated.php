@@ -2,38 +2,36 @@
 
 namespace App\Events;
 
-use App\Http\Resources\MessageResource;
+use App\Http\Resources\ChatResource;
 use App\Models\Chat;
-use App\Models\Message;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class MessageSent implements ShouldBroadcast
+class ChatUpdated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public function __construct(
-        public readonly Message $message,
         public readonly Chat $chat,
     ) {}
 
     public function broadcastOn(): PrivateChannel
     {
-        return new PrivateChannel("chat.{$this->chat->id}");
+        return new PrivateChannel('dashboard');
     }
 
     public function broadcastAs(): string
     {
-        return 'message.sent';
+        return 'chat.updated';
     }
 
     public function broadcastWith(): array
     {
-        $this->message->loadMissing('attachments');
+        $chat = $this->chat->fresh()->load(['telegramUser', 'assignedTo', 'latestMessage']);
 
-        return MessageResource::make($this->message)->resolve();
+        return ChatResource::make($chat)->resolve();
     }
 }

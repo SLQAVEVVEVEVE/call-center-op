@@ -6,6 +6,8 @@ import { useAuthStore } from '@/stores/auth'
 import { useChatsStore } from '@/stores/chats'
 import ChatListItem from '@/components/ChatListItem.vue'
 
+defineProps<{ compact?: boolean }>()
+
 const router = useRouter()
 const auth = useAuthStore()
 const chats = useChatsStore()
@@ -26,67 +28,42 @@ function logout() {
 </script>
 
 <template>
-  <div class="chats-layout">
-    <header class="chats-header glass">
-      <span class="chats-title">Chats</span>
-      <button class="logout-btn" @click="logout">Logout</button>
+  <div class="min-h-dvh flex flex-col bg-gradient-to-br from-slate-100 to-slate-50">
+    <header
+      class="glass flex items-center justify-between px-6 py-4 sticky top-0 z-10"
+    >
+      <div class="flex items-center gap-3">
+        <button
+          type="button"
+          class="text-sm font-semibold text-[var(--color-brand-500)]"
+          @click="router.push('/dashboard')"
+        >
+          ← Панель
+        </button>
+        <span class="text-xl font-bold text-[var(--color-ink)]">Чаты</span>
+      </div>
+      <button
+        type="button"
+        class="text-sm font-semibold text-[var(--color-brand-500)] hover:text-[var(--color-brand-600)]"
+        @click="logout"
+      >
+        Выйти
+      </button>
     </header>
-    <main class="chats-list">
-      <p v-if="chats.list.length === 0" class="empty-state">
-        No chats yet. Wait for a Telegram message.
+    <main class="flex-1 px-4 py-4 w-full max-w-[600px] mx-auto flex flex-col gap-3">
+      <p
+        v-if="chats.list.length === 0"
+        class="text-center text-[var(--color-ink-muted)] mt-16"
+      >
+        Чатов пока нет. Дождитесь сообщения из Telegram.
       </p>
       <ChatListItem
         v-for="chat in chats.list"
         :key="chat.id"
         :chat="chat"
+        :compact="compact"
         @click="router.push(`/chats/${chat.id}`)"
       />
     </main>
   </div>
 </template>
-
-<style scoped>
-.chats-layout {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #e8edf5 0%, #f0f4fb 100%);
-  display: flex;
-  flex-direction: column;
-}
-.chats-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 1.5rem;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-.chats-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #1e293b;
-}
-.logout-btn {
-  background: none;
-  border: none;
-  color: #2563eb;
-  font-weight: 600;
-  cursor: pointer;
-  font-size: 0.9375rem;
-}
-.chats-list {
-  flex: 1;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  max-width: 600px;
-  width: 100%;
-  margin: 0 auto;
-}
-.empty-state {
-  text-align: center;
-  color: #94a3b8;
-  margin-top: 4rem;
-}
-</style>

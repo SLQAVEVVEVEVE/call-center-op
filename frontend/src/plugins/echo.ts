@@ -1,12 +1,26 @@
 import { configureEcho } from '@laravel/echo-vue'
 import { useAuthStore } from '@/stores/auth'
 
+/**
+ * Resolve the Reverb WebSocket host. If the env value is empty or the literal
+ * "auto", fall back to whatever host the page was loaded from. This lets the
+ * same build run from localhost, home WiFi, the phone hotspot, or the APK
+ * WebView without rebuilding.
+ */
+function resolveReverbHost(): string {
+  const envHost = import.meta.env.VITE_REVERB_HOST
+  if (!envHost || envHost === 'auto') {
+    return window.location.hostname
+  }
+  return envHost
+}
+
 export function bootEcho() {
   const auth = useAuthStore()
   configureEcho({
     broadcaster: 'reverb',
     key: import.meta.env.VITE_REVERB_APP_KEY,
-    wsHost: import.meta.env.VITE_REVERB_HOST,
+    wsHost: resolveReverbHost(),
     wsPort: Number(import.meta.env.VITE_REVERB_PORT ?? 80),
     wssPort: Number(import.meta.env.VITE_REVERB_PORT ?? 443),
     forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? 'https') === 'https',
