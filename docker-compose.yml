@@ -84,8 +84,46 @@ services:
       app: { condition: service_started }
     networks: [appnet]
 
+  # Vite dev server (Vue 3 + Capacitor frontend).
+  # Bind-mounts ./frontend so HMR works against host edits. node_modules lives
+  # in a named volume to keep container deps isolated from any host-side
+  # `npm install` (and to avoid Windows/WSL2 perf issues on a bind-mounted
+  # node_modules folder). Proxy target is the in-network nginx service.
+  vite:
+    image: node:22-alpine
+    container_name: cc_vite
+    restart: unless-stopped
+    working_dir: /app
+    # Install deps on first boot (when node_modules empty), then run dev server.
+    command: >
+      sh -c "if [ ! -d node_modules/.bin ]; then
+               echo '[vite] installing deps…' &&
+               npm install --prefer-offline --no-audit --no-fund;
+             fi &&
+             npm run dev -- --host 0.0.0.0"
+    environment:
+      # Proxy target inside the Docker network (nginx container, port 80).
+      VITE_BACKEND_URL: "http://nginx:80"
+      # File-watch polling — bind mounts on Windows/WSL2 don't deliver inotify
+      # events reliably, so chokidar must poll.
+      CHOKIDAR_USEPOLLING: "true"
+      WATCHPACK_POLLING: "true"
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./frontend:/app
+      - vite_node_modules:/app/node_modules
+    ports: ["5173:5173"]
+    depends_on:
+      - nginx
+    networks: [appnet]
+
 volumes:
   mysql_data:
+  vite_node_modules:
 
 networks:
   appnet:
