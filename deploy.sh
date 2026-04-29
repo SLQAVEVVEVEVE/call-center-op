@@ -26,8 +26,7 @@ docker compose -f docker-compose.prod.yml up -d --build
 echo "=== [4/5] Running migrations ==="
 docker compose -f docker-compose.prod.yml exec app php artisan migrate --force
 
-echo "=== [5/5] Storage link + cache ==="
-docker compose -f docker-compose.prod.yml exec app php artisan storage:link || true
+echo "=== [5/5] Caching config & routes ==="
 docker compose -f docker-compose.prod.yml exec app php artisan config:cache
 docker compose -f docker-compose.prod.yml exec app php artisan route:cache
 
